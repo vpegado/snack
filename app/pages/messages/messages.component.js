@@ -10,9 +10,10 @@ const messages = {
   controllerAs: 'ctrl',
   controller: class OrganizationCtrl {
 
-    constructor($stateParams, $scope, $mdSidenav, UserService) {
+    constructor($stateParams, $scope, $window, $mdSidenav, UserService) {
       'ngInject';
       this.$scope = $scope;
+      this.$window = $window;
       this.$stateParams = $stateParams;
       this.$mdSidenav = $mdSidenav;
       this.UserService = UserService;
@@ -27,6 +28,7 @@ const messages = {
     $onInit() {
       this.channelRef.get().then((querySnapshot) => {
         this.channel = querySnapshot.data();
+        this.$window.document.title = `Snack #${this.channel.name}`;
         this.$scope.$apply();
       });
 

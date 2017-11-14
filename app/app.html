@@ -44,7 +44,7 @@
         </md-button>
       </div>
       <md-list>
-        <md-list-item ng-repeat="channel in ctrl.channels"
+        <md-list-item ng-repeat="channel in ctrl.channels | orderBy:'name'"
                       ng-click="ctrl.openMessages(channel.id, $mdMedia('gt-sm'))"
                       ng-class="{'active': ctrl.$stateParams.channelId === channel.id}">
           # {{ channel.name }}

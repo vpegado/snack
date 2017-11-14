@@ -9,20 +9,22 @@ export const AppComponent = {
     constructor($state, $stateParams, $scope, $mdDialog, $mdSidenav, $firebaseAuth, UserService) {
       'ngInject';
 
+      this.$mdDialog    = $mdDialog;
+      this.$mdSidenav   = $mdSidenav;
+      this.$scope       = $scope;
+      this.$state       = $state;
       this.$stateParams = $stateParams;
-      this.$state = $state;
-      this.$mdDialog = $mdDialog;
-      this.$mdSidenav = $mdSidenav;
-      this.$scope = $scope;
-      this.user = UserService.user;
-      this.signIn = UserService.signIn;
-      this.signOut = UserService.signOut;
-      this.channels = [];
-      this.db = firebase.firestore();
+      this.channels     = [];
+      this.db           = firebase.firestore();
+      this.loading      = true;
+      this.signIn       = UserService.signIn;
+      this.signOut      = UserService.signOut;
+      this.user         = UserService.user;
     }
 
     $onInit() {
       this.db.collection('channels').onSnapshot((querySnapshot) => {
+        this.loading = false;
         this.channels = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
@@ -36,14 +38,15 @@ export const AppComponent = {
     }
 
     addChannel(ev) {
-      const prompt = this.$mdDialog.prompt()
-        .title('What would you name your channel?')
-        .textContent('Something vigorous.')
-        .placeholder('Channel name')
-        .ariaLabel('Channel name')
-        .targetEvent(ev)
-        .ok('Create')
-        .cancel('Cancel');
+      const prompt = this.$mdDialog.prompt({
+        title: 'What would you name your channel?',
+        textContent: 'Something vigorous.',
+        placeholder: 'Channel name',
+        ariaLabel: 'Channel name',
+        targetEvent: ev,
+        ok: 'Create',
+        cancel: 'Cancel'
+      });
 
       this.$mdDialog.show(prompt)
         .then((name) => this.db.collection('channels').add({

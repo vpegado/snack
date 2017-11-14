@@ -8,7 +8,7 @@ const start = {
     constructor($mdSidenav, $window) {
       'ngInject';
       this.$mdSidenav = $mdSidenav;
-      this.$window = $window;
+      this.$window    = $window;
     }
 
     $onInit() {

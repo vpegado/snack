@@ -10,19 +10,17 @@ const messages = {
   controllerAs: 'ctrl',
   controller: class OrganizationCtrl {
 
-    constructor($stateParams, $scope, $window, $mdSidenav, UserService) {
+    constructor($scope, $window, $mdSidenav, UserService) {
       'ngInject';
-      this.$scope = $scope;
-      this.$window = $window;
-      this.$stateParams = $stateParams;
-      this.$mdSidenav = $mdSidenav;
+
+      this.$mdSidenav  = $mdSidenav;
+      this.$scope      = $scope;
+      this.$window     = $window;
+      this.db          = firebase.firestore();
+      this.loading     = true;
+      this.message     = { body: '' };
+      this.messages    = [];
       this.UserService = UserService;
-      this.messages = [];
-      this.loading = true;
-      this.db = firebase.firestore();
-      this.message = {
-        body: ''
-      };
     }
 
     $onInit() {
@@ -32,7 +30,8 @@ const messages = {
         this.$scope.$apply();
       });
 
-      this.messagesCollection.where('channel', '==', this.channelRef)
+      this.messagesCollection
+        .where('channel', '==', this.channelRef)
         .onSnapshot((querySnapshot) => {
           this.loading = false;
           this.$scope.$apply();
@@ -56,15 +55,17 @@ const messages = {
     }
 
     sendMessage ({
-      body = 'has nothing to say',
-      timestamp = firebase.firestore.FieldValue.serverTimestamp()
+      body      = 'has nothing to say',
+      timestamp = firebase.firestore.FieldValue.serverTimestamp(),
+      user      = this.db.doc(`users/${this.UserService.user.uid}`),
+      channel   = this.channelRef
     }) {
       this.message.body = '';
       this.messagesCollection.add({
         body,
         timestamp,
-        user: this.db.doc(`users/${this.UserService.user.uid}`),
-        channel: this.channelRef,
+        user,
+        channel
       });
     }
 

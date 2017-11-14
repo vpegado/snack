@@ -3,11 +3,11 @@ import firebase from 'firebase';
 
 function UserService ($firebaseAuth) {
   'ngInject';
-  const auth = firebase.auth();
-  const db = firebase.firestore();
   const $auth = $firebaseAuth();
-  var user = {};
+  const auth  = firebase.auth();
+  const db    = firebase.firestore();
   var pending = true;
+  var user    = {};
 
   auth.onAuthStateChanged((user) => {
     if (user) {
@@ -16,15 +16,9 @@ function UserService ($firebaseAuth) {
     pending = false;
   });
 
-  const signIn = () => {
-    return $auth.$signInWithPopup('google')
-      .then(({user}) => {
-        setUser(user);
-      })
-      .catch(() => {
-        setUser({});
-      });
-  };
+  const signIn = () => $auth.$signInWithPopup('google')
+    .then(({user}) => setUser(user))
+    .catch(()      => setUser({}));
 
   const signOut = () => {
     $auth.$signOut();
@@ -54,9 +48,9 @@ function UserService ($firebaseAuth) {
 
   return {
     pending,
-    user,
     signIn,
-    signOut
+    signOut,
+    user
   };
 
 }

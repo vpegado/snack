@@ -8,7 +8,7 @@ const messages = {
     messagesCollection: '<'
   },
   controllerAs: 'ctrl',
-  controller: class OrganizationCtrl {
+  controller: class MessagesCtrl {
 
     constructor($scope, $window, $mdSidenav, UserService) {
       'ngInject';

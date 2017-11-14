@@ -4,7 +4,7 @@ import template from './app.html';
 export const AppComponent = {
   template,
   controllerAs: 'ctrl',
-  controller: class {
+  controller: class AppController {
 
     constructor($state, $stateParams, $scope, $mdDialog, $mdSidenav, $firebaseAuth, UserService) {
       'ngInject';
